@@ -42,8 +42,6 @@ class YourPornIE(KnownPiracyIE, plugin_name='uncensored'):
         def ssut51(arg):
             return sum(int(ch) for ch in arg if ch.isdigit())
 
-        parts = src.split("/")
-    
         boo = base64.b64encode(
             (str(ssut51(parts[6])) + "-" + "sxyprn.com" + "-" + str(ssut51(parts[7]))).encode()
         ).decode().replace('+', '-').replace('/', '_').replace('=', '.')
