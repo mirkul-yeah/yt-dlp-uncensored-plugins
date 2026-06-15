@@ -1,16 +1,15 @@
 import base64
 
 from yt_dlp.extractor.unsupported import KnownPiracyIE
-from yt_dlp.compat import compat_str
 from yt_dlp.utils import (
     parse_duration,
     urljoin,
 )
 
 class YourPornIE(KnownPiracyIE, plugin_name='uncensored'):
-    _VALID_URL = r'https?://(?:www\.)?sxyprn\.com/post/(?P<id>[^/?#&.]+)'
+    _VALID_URL = r'https?://(?:www\.)?sxyprn\.net/post/(?P<id>[^/?#&.]+)'
     _TESTS = [{
-        'url': 'https://sxyprn.com/post/57ffcb2e1179b.html',
+        'url': 'https://sxyprn.net/post/57ffcb2e1179b',
         'md5': '6f8682b6464033d87acaa7a8ff0c092e',
         'info_dict': {
             'id': '57ffcb2e1179b',
@@ -24,7 +23,7 @@ class YourPornIE(KnownPiracyIE, plugin_name='uncensored'):
             'skip_download': True,
         },
     }, {
-        'url': 'https://sxyprn.com/post/57ffcb2e1179b.html',
+        'url': 'https://sxyprn.net/post/57ffcb2e1179b',
         'only_matching': True,
     }]
 
@@ -43,10 +42,10 @@ class YourPornIE(KnownPiracyIE, plugin_name='uncensored'):
             return sum(int(ch) for ch in arg if ch.isdigit())
 
         boo = base64.b64encode(
-            (str(ssut51(parts[6])) + "-" + "sxyprn.com" + "-" + str(ssut51(parts[7]))).encode()
+            (str(ssut51(parts[6])) + "-" + "sxyprn.net" + "-" + str(ssut51(parts[7]))).encode()
         ).decode().replace('+', '-').replace('/', '_').replace('=', '.')
     
-        parts[1] += "8" + "/" + boo
+        parts[1] += "5" + "/" + boo
         parts[5] = str(int(parts[5]) - ssut51(parts[6]) - ssut51(parts[7]))
         video_url = urljoin(url, '/'.join(parts))
 
