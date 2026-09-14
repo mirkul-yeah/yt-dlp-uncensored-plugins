@@ -1,13 +1,15 @@
 import base64
+from urllib.parse import urlparse
 
 from yt_dlp.extractor.unsupported import KnownPiracyIE
 from yt_dlp.utils import (
     parse_duration,
     urljoin,
+
 )
 
 class YourPornIE(KnownPiracyIE, plugin_name='uncensored'):
-    _VALID_URL = r'https?://(?:www\.)?sxyprn\.net/post/(?P<id>[^/?#&.]+)'
+    _VALID_URL = r'https?://(?:www\.)?sxyprn\.(?:net|com)/post/(?P<id>[^/?#&\.]+)'
     _TESTS = [{
         'url': 'https://sxyprn.net/post/57ffcb2e1179b',
         'md5': '6f8682b6464033d87acaa7a8ff0c092e',
@@ -23,11 +25,30 @@ class YourPornIE(KnownPiracyIE, plugin_name='uncensored'):
             'skip_download': True,
         },
     }, {
-        'url': 'https://sxyprn.net/post/57ffcb2e1179b',
+        'url': 'https://sxyprn.com/post/57ffcb2e1179b',
         'only_matching': True,
     }]
+    
+    def _check_hostname(self, url):
+        """
+        Extracts and cleans the hostname from a URL.
+        """
+        try:
+            parsed_url = urlparse(url)
+            hostname = parsed_url.hostname
+            
+            # Strip 'www.'
+            if hostname and hostname.startswith('www.'):
+                hostname = hostname[4:]
+                
+            return hostname
+        except Exception:
+            return None
+
 
     def _real_extract(self, url):
+        if not self.suitable(url):
+            return None
         video_id = self._match_id(url)
 
         webpage = self._download_webpage(url, video_id)
@@ -42,10 +63,14 @@ class YourPornIE(KnownPiracyIE, plugin_name='uncensored'):
             return sum(int(ch) for ch in arg if ch.isdigit())
 
         boo = base64.b64encode(
-            (str(ssut51(parts[6])) + "-" + "sxyprn.net" + "-" + str(ssut51(parts[7]))).encode()
+            (str(ssut51(parts[6])) + "-" + self._check_hostname(url) + "-" + str(ssut51(parts[7]))).encode()
         ).decode().replace('+', '-').replace('/', '_').replace('=', '.')
     
-        parts[1] += "5" + "/" + boo
+        base_s = "5"
+        if self._check_hostname(url) == "sxyprn.com":
+            base_s = "8"
+
+        parts[1] += base_s  + "/" + boo
         parts[5] = str(int(parts[5]) - ssut51(parts[6]) - ssut51(parts[7]))
         video_url = urljoin(url, '/'.join(parts))
 
